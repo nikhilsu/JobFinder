@@ -1,13 +1,24 @@
 from __future__ import print_function
 
+import getopt
+import sys
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 
-driver = webdriver.Chrome()
-driver.get("https://h30631.www3.hp.com/search-jobs")
+
+def should_run_in_headless_mode():
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], 'h', ['headless'])
+    except getopt.GetoptError:
+        print('invalid options')
+    for opt, arg in opts:
+        if opt in ('-h', '--headless'):
+            return True
+    return False
 
 
 def get_user_input_to_query_jobs():
@@ -51,16 +62,26 @@ def display_search_results():
     print("--------------------------------------------------------------------------------")
 
 
-try:
-    get_user_input_to_query_jobs()
-    apply_job_filters()
+if __name__ == "__main__":
+    if should_run_in_headless_mode():
+        driver = webdriver.PhantomJS()
+        driver.set_window_size(1280, 720)
+    else:
+        driver = webdriver.Chrome()
 
-    driver.find_element_by_xpath("//button[text()='Search']").click()
-    wait_till_search_filter_is_applied()
+    driver.get("https://h30631.www3.hp.com/search-jobs")
 
-    display_search_results()
+    try:
+        get_user_input_to_query_jobs()
+        apply_job_filters()
 
-except Exception as e:
-    print('No Jobs found')
-finally:
-    driver.close()
+        driver.find_element_by_xpath("//button[text()='Search']").click()
+        wait_till_search_filter_is_applied()
+
+        display_search_results()
+
+    except Exception as e:
+        print(e)
+        print('No Jobs found')
+    finally:
+        driver.close()
