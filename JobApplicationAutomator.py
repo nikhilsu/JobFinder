@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
-
+import JobDetails
 
 def should_run_in_headless_mode():
     try:
@@ -70,6 +70,9 @@ if __name__ == "__main__":
         driver = webdriver.Chrome()
 
     driver.get("https://h30631.www3.hp.com/search-jobs")
+
+    job_detail = JobDetails.JobDetails(driver)
+    job_detail.display_details()
 
     try:
         get_user_input_to_query_jobs()
