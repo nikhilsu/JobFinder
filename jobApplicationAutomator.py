@@ -2,6 +2,7 @@ from __future__ import print_function
 from selenium import webdriver
 from jobFilters import JobFilters
 from jobFinder import JobFinder
+from jobApplication import JobApplication
 from jobQueryParameters import JobQueryParameters
 import getopt
 import sys
@@ -19,26 +20,22 @@ def should_run_in_headless_mode():
 
 
 def get_user_input_to_query_jobs():
-    print('Job Category : ', end='')
-    job_category = raw_input()
-    print('Country : ', end='')
-    country = raw_input()
-    print('State : ', end='')
-    state = raw_input()
-    print('City : ', end='')
-    city = raw_input()
+    job_category = raw_input('Job Category : ')
+    country = raw_input('Country : ')
+    state = raw_input('State : ')
+    city = raw_input('City : ')
     return JobQueryParameters(job_category, country, state, city)
 
 
 def display_job_results(jobs):
     delimiter = ' |\t '
 
-    print("--------------------------------------------------------------------------------")
-    print("Sl.No." + delimiter + "Job Description" + delimiter + "Job Location" + delimiter + "Web Link")
-    print("--------------------------------------------------------------------------------")
+    print('--------------------------------------------------------------------------------')
+    print('Sl.No.' + delimiter + 'Job Description' + delimiter + 'Job Location' + delimiter + 'Web Link')
+    print('--------------------------------------------------------------------------------')
     for index, job in enumerate(jobs):
         print(str(index) + delimiter + job.description + delimiter + job.location + delimiter + job.web_link)
-    print("--------------------------------------------------------------------------------")
+    print('--------------------------------------------------------------------------------')
 
 
 if __name__ == "__main__":
@@ -48,14 +45,21 @@ if __name__ == "__main__":
     else:
         driver = webdriver.Chrome()
 
-    driver.get("https://h30631.www3.hp.com/search-jobs")
+    driver.get('https://h30631.www3.hp.com/search-jobs')
 
     job_filters = JobFilters(driver)
     job_filters.display_filters()
 
     try:
         job_finder = JobFinder(driver, get_user_input_to_query_jobs())
-        display_job_results(job_finder.fetch_results())
+        job_results = job_finder.fetch_results()
+        display_job_results(job_results)
+        job_index = int(raw_input('Enter Sl.No of Job to apply for : '))
+        if job_index in range(1, len(job_results)):
+            job_application = JobApplication(driver, job_results[job_index])
+            job_application.apply()
+        else:
+            raise Exception('Invalid job chosen')
 
     except Exception as e:
         print(e)
