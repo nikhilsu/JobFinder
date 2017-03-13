@@ -1,6 +1,6 @@
 from __future__ import print_function
 from selenium import webdriver
-from jobFilters import JobFilters
+from jobFilters import JobFiltersCollector
 from jobFinder import JobFinder
 from jobApplication import JobApplication
 from jobQueryParameters import JobQueryParameters
@@ -38,6 +38,24 @@ def display_job_results(jobs):
     print('--------------------------------------------------------------------------------')
 
 
+def display_filters(filters):
+    print("\n\nJob Categories :-")
+    for job_category in filters.job_categories:
+        print(job_category)
+
+    print("\n\nCountries :-")
+    for country in filters.countries:
+        print(country)
+
+    print("\n\nStates :-")
+    for state in filters.states:
+        print(state)
+
+    print("\n\nCities :-")
+    for city in filters.cities:
+        print(city)
+
+
 if __name__ == "__main__":
     if should_run_in_headless_mode():
         driver = webdriver.PhantomJS()
@@ -47,8 +65,8 @@ if __name__ == "__main__":
 
     driver.get('https://h30631.www3.hp.com/search-jobs')
 
-    job_filters = JobFilters(driver)
-    job_filters.display_filters()
+    job_filters = JobFiltersCollector(driver).fetch_filters()
+    display_filters(job_filters)
 
     try:
         job_finder = JobFinder(driver, get_user_input_to_query_jobs())
