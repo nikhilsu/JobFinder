@@ -1,6 +1,9 @@
-class MyInformationPage(object):
-    def __init__(self, driver, user):
-        self.driver = driver
+from src.model.pages.page import Page
+
+
+class MyInformationPage(Page):
+    def __init__(self, driver, name, user):
+        super(MyInformationPage, self).__init__(driver, name)
         self.user = user
 
     def fill(self):
@@ -14,3 +17,4 @@ class MyInformationPage(object):
         drop_down_element = self.driver.find_element_by_xpath('//div[@id="dropDownSelectList.sources-input-entry-3"]')
         self.driver.execute_script("arguments[0].click();", drop_down_element)
         self.driver.find_element_by_xpath('//button[@data-automation-id="wd-CommandButton_next"]').click()
+        super(MyInformationPage, self).click_next_button()

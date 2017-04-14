@@ -15,11 +15,11 @@ Finds Jobs given Job description.
 ## Usage
 Headless mode :-
 ```
-python src/jobApplicationAutomator.py --headless
+python main.py --headless
 ```
 Non-headless mode :- 
 ```
-python src/jobApplicationAutomator.py
+python main.py
 ```
 
 ## Contributing

@@ -4,16 +4,17 @@ import getopt
 import sys
 
 from selenium import webdriver
+from src.model.pages.applicationQuestionsPage import ApplicationQuestionsPage
+from src.model.pages.myExperiencePage import MyExperiencePage
+from src.model.pages.myInformationPage import MyInformationPage
 
-from answers import Answers
-from applicationQuestionsPage import ApplicationQuestionsPage
-from createAccountPage import CreateAccountPage
-from inputOutput import InputOutput, JobOutput
-from jobApplication import JobApplication
-from jobFilter import JobFilter
-from jobFinder import JobFinder
-from myInformationPage import MyInformationPage
-from user import User
+from src.controller.jobApplication import JobApplication
+from src.controller.jobFilter import JobFilter
+from src.controller.jobFinder import JobFinder
+from src.model.answers import Answers
+from src.model.inputOutput import InputOutput, JobOutput
+from src.model.pages.createAccountPage import CreateAccountPage
+from src.model.user import User
 
 
 def should_run_in_headless_mode():
@@ -32,6 +33,15 @@ def get_all_job_filters():
             JobFilter(driver, 'Country', 'Country'),
             JobFilter(driver, 'State', 'State'),
             JobFilter(driver, 'City', 'City')]
+
+
+def build_pages():
+    create_account_page = CreateAccountPage(driver, '', user)
+    my_information_page = MyInformationPage(driver, 'My Information', user)
+    my_experience_page = MyExperiencePage(driver, 'My Experience')
+    application_questions_page = ApplicationQuestionsPage(driver, 'Application Questions', answers)
+
+    return [create_account_page, my_information_page, my_experience_page, application_questions_page]
 
 
 if __name__ == "__main__":
@@ -54,12 +64,9 @@ if __name__ == "__main__":
             last_name = InputOutput.input('Last Name : ')
             phone_number = InputOutput.get_valid_phone_number()
             user = User(first_name, last_name, phone_number, email_address, InputOutput.get_valid_password())
-            create_account_page = CreateAccountPage(driver, user)
-            my_information_page = MyInformationPage(driver, user)
             answers = Answers(True, True, True, True, True, ["India"], True, True)
-            application_questions_page = ApplicationQuestionsPage(driver, answers)
-            job_application = JobApplication(driver, job_results[job_index], user, create_account_page,
-                                             my_information_page, application_questions_page)
+
+            job_application = JobApplication(driver, job_results[job_index], user, build_pages())
             job_application.apply()
         else:
             raise Exception('Invalid job chosen')
@@ -67,5 +74,5 @@ if __name__ == "__main__":
     except Exception as e:
         InputOutput.output(e)
         InputOutput.output('No Jobs found')
-    finally:
-        driver.close()
+    # finally:
+    #     driver.close()

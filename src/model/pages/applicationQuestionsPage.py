@@ -1,6 +1,9 @@
-class ApplicationQuestionsPage(object):
-    def __init__(self, driver, answers):
-        self.driver = driver
+from src.model.pages.page import Page
+
+
+class ApplicationQuestionsPage(Page):
+    def __init__(self, driver, name, answers):
+        super(ApplicationQuestionsPage, self).__init__(driver, name)
         self.answers = answers
 
     def fill(self):
@@ -33,6 +36,7 @@ class ApplicationQuestionsPage(object):
         eighth_answer = self.__get_answer(self.answers.eighth_answer)
         self.__select_option_from_drop_down(eighth_answer, '//*[@id="wd-FieldSet-NO_METADATA_ID-uid45"]/div['
                                                            '2]/div/ul/li/div[2]/div')
+        super(ApplicationQuestionsPage, self).click_next_button()
 
     def __select_option_from_drop_down(self, first_answer, drop_down):
         self.driver.find_element_by_xpath(drop_down).click()

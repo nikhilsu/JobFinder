@@ -1,8 +1,9 @@
 import time
-from selenium.webdriver.support.ui import Select
-from inputOutput import InputOutput
 
-from inputOutput import Color
+from selenium.webdriver.support.ui import Select
+
+from src.model.inputOutput import Color
+from src.model.inputOutput import InputOutput
 
 
 class JobFilter(object):
