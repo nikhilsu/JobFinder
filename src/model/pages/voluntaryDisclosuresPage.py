@@ -15,7 +15,7 @@ class VoluntaryDisclosuresPage(Page):
         base.select_option_from_drop_down(self.gender, gender_selection_drop_down)
 
         check_boxes = self.driver.find_elements_by_xpath('//div[@data-automation-id="checkboxPanel"]')
-        InputOutput.output('Are you? :-')
+        InputOutput.output('\n\n\nAre you? :-')
         for check_box in check_boxes:
             check_box_text = check_box.find_element_by_xpath('../label').text
             if check_box_text == '' or InputOutput.input_yes_no(check_box_text):

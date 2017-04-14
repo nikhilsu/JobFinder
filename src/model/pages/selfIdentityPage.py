@@ -16,7 +16,7 @@ class SelfIdentityPage(Page):
         base = super(SelfIdentityPage, self)
 
         check_boxes = self.driver.find_elements_by_xpath('//div[@data-automation-id="checkboxPanel"]')
-        answer = InputOutput.input_yes_no('Do you wish to answer a question on your disability(/ies), if any?')
+        answer = InputOutput.input_yes_no('\n\nDo you wish to answer a question on your disability(/ies), if any?')
         if not answer:
             base.try_and_click(check_boxes[2])
         else:

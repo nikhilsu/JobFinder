@@ -7,12 +7,14 @@ from selenium import webdriver
 from src.controller.jobApplication import JobApplication
 from src.controller.jobFilter import JobFilter
 from src.controller.jobFinder import JobFinder
-from src.helper.inputOutput import InputOutput, JobOutput
+from src.helper.inputOutput import InputOutput, JobOutput, Color
+from src.helper.timer import Timer
 from src.model.answers import Answers
 from src.model.pages.applicationQuestionsPage import ApplicationQuestionsPage
 from src.model.pages.createAccountPage import CreateAccountPage
 from src.model.pages.myExperiencePage import MyExperiencePage
 from src.model.pages.myInformationPage import MyInformationPage
+from src.model.pages.reviewPage import ReviewPage
 from src.model.pages.selfIdentityPage import SelfIdentityPage
 from src.model.pages.voluntaryDisclosuresPage import VoluntaryDisclosuresPage
 from src.model.user import User
@@ -43,9 +45,10 @@ def build_pages():
     application_questions_page = ApplicationQuestionsPage(driver, answers)
     voluntary_disclosures_page = VoluntaryDisclosuresPage(driver, user.gender)
     self_identity_page = SelfIdentityPage(driver, user.full_name())
+    review_page = ReviewPage(driver)
 
-    return [create_account_page, my_information_page, my_experience_page,
-            application_questions_page, voluntary_disclosures_page, self_identity_page]
+    return [create_account_page, my_information_page, my_experience_page, application_questions_page,
+            voluntary_disclosures_page, self_identity_page, review_page]
 
 
 def set_console_size(rows, columns):
@@ -75,10 +78,14 @@ if __name__ == "__main__":
             phone_number = InputOutput.get_valid_phone_number()
             gender = InputOutput.input('Gender', ['Male', 'Female', 'Undeclared'])
             user = User(first_name, last_name, phone_number, email_address, InputOutput.get_valid_password(), gender)
-            answers = Answers(True, True, True, True, True, ["India"], True, True)
+            answers = Answers(False, False, False, False, False, ["India"], True, True)
 
             job_application = JobApplication(driver, job_results[job_index], user, build_pages())
             job_application.apply()
+
+            InputOutput.output('\n\n' + Color.UNDERLINE + Color.BOLD + 'Job Application complete! Thank you for using '
+                                                                       'our service.' + Color.END + Color.END)
+            Timer.sleep(5)
         else:
             raise Exception('Invalid job chosen')
 
