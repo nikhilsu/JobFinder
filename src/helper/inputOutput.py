@@ -1,11 +1,43 @@
 from texttable import Texttable
 import re
+import getpass
 
 
 class InputOutput(object):
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+
     @staticmethod
-    def input(prompt=''):
-        return raw_input(prompt)
+    def input(prompt, valid_input=None):
+        if valid_input is None:
+            return raw_input(prompt)
+        else:
+            user_input = raw_input(prompt + ' (' + '/'.join(valid_input) + ') : ')
+            while True:
+                if user_input in valid_input:
+                    return user_input
+                else:
+                    user_input = raw_input('Invalid input, re-enter : ')
+
+    @staticmethod
+    def input_yes_no(question, default='yes'):
+        if default is None:
+            prompt = ' [y/n] '
+        elif default.lower() == 'yes':
+            prompt = ' [Y/n] '
+        elif default.lower() == 'no':
+            prompt = ' [y/N] '
+        else:
+            raise ValueError("invalid default answer: '%s'" % default)
+
+        while True:
+            choice = InputOutput.input(question + prompt).lower()
+            if default is not None and choice == '':
+                return InputOutput.valid[default]
+            elif choice in InputOutput.valid:
+                return InputOutput.valid[choice]
+            else:
+                InputOutput.output("Please respond with 'yes' or 'no'(or 'y' or 'n').")
 
     @staticmethod
     def output(string):
@@ -13,18 +45,19 @@ class InputOutput(object):
 
     @staticmethod
     def get_valid_password():
-        return InputOutput.get_valid_input('Password (1 uppercase, 1 lowercase, 1 number, 1 special character, '
-                                           'min length - 8) : ', r'[A-Za-z0-9@#$!%^&+=]{8,}')
+        user_input = getpass.getpass('Password (1 uppercase, 1 lowercase, 1 number, 1 special character, min length '
+                                     '- 8) : ')
+        while True:
+            if re.match(r'(?=.*?\d)(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[@#$!%^&+=])[A-Za-z\d@#$!%^&+=]{8,}', user_input):
+                return user_input
+            else:
+                user_input = getpass.getpass('Invalid input, re-enter : ')
 
     @staticmethod
     def get_valid_phone_number():
-        return InputOutput.get_valid_input('Phone Number : ', r'[0-9]{8,}')
-
-    @staticmethod
-    def get_valid_input(prompt, regex_matcher):
-        user_input = InputOutput.input(prompt)
+        user_input = InputOutput.input('Phone Number : ')
         while True:
-            if re.match(regex_matcher, user_input):
+            if re.match(r'[0-9]{8,}', user_input):
                 return user_input
             else:
                 user_input = InputOutput.input('Invalid input, re-enter : ')

@@ -4,7 +4,6 @@ import getopt
 import sys
 
 from selenium import webdriver
-
 from src.controller.jobApplication import JobApplication
 from src.controller.jobFilter import JobFilter
 from src.controller.jobFinder import JobFinder
@@ -14,6 +13,8 @@ from src.model.pages.applicationQuestionsPage import ApplicationQuestionsPage
 from src.model.pages.createAccountPage import CreateAccountPage
 from src.model.pages.myExperiencePage import MyExperiencePage
 from src.model.pages.myInformationPage import MyInformationPage
+from src.model.pages.selfIdentityPage import SelfIdentityPage
+from src.model.pages.voluntaryDisclosuresPage import VoluntaryDisclosuresPage
 from src.model.user import User
 
 
@@ -36,12 +37,15 @@ def get_all_job_filters():
 
 
 def build_pages():
-    create_account_page = CreateAccountPage(driver, '', user)
-    my_information_page = MyInformationPage(driver, 'My Information', user)
-    my_experience_page = MyExperiencePage(driver, 'My Experience')
-    application_questions_page = ApplicationQuestionsPage(driver, 'Application Questions', answers)
+    create_account_page = CreateAccountPage(driver, user)
+    my_information_page = MyInformationPage(driver, user)
+    my_experience_page = MyExperiencePage(driver)
+    application_questions_page = ApplicationQuestionsPage(driver, answers)
+    voluntary_disclosures_page = VoluntaryDisclosuresPage(driver, user.gender)
+    self_identity_page = SelfIdentityPage(driver, user.full_name())
 
-    return [create_account_page, my_information_page, my_experience_page, application_questions_page]
+    return [create_account_page, my_information_page, my_experience_page,
+            application_questions_page, voluntary_disclosures_page, self_identity_page]
 
 
 def set_console_size(rows, columns):
@@ -69,7 +73,8 @@ if __name__ == "__main__":
             first_name = InputOutput.input('First Name : ')
             last_name = InputOutput.input('Last Name : ')
             phone_number = InputOutput.get_valid_phone_number()
-            user = User(first_name, last_name, phone_number, email_address, InputOutput.get_valid_password())
+            gender = InputOutput.input('Gender', ['Male', 'Female', 'Undeclared'])
+            user = User(first_name, last_name, phone_number, email_address, InputOutput.get_valid_password(), gender)
             answers = Answers(True, True, True, True, True, ["India"], True, True)
 
             job_application = JobApplication(driver, job_results[job_index], user, build_pages())

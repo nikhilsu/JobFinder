@@ -7,8 +7,8 @@ from src.model.pages.page import Page
 
 
 class CreateAccountPage(Page):
-    def __init__(self, driver, name, user):
-        super(CreateAccountPage, self).__init__(driver, name)
+    def __init__(self, driver, user):
+        super(CreateAccountPage, self).__init__(driver, 'Create Account')
         self.user = user
 
     def __click_next_button(self):
