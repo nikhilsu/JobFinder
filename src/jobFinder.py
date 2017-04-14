@@ -1,4 +1,3 @@
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -6,19 +5,13 @@ from job import Job
 
 
 class JobFinder:
-    def __init__(self, driver, job_search_parameters):
-        self.job_query_parameters = job_search_parameters
+    def __init__(self, driver, job_filters):
+        self.job_filters = job_filters
         self.driver = driver
 
     def __apply_job_filters(self):
-        job_category_drop_down = Select(self.driver.find_element_by_name('ac'))
-        country_drop_down = Select(self.driver.find_element_by_name('Country'))
-        state_drop_down = Select(self.driver.find_element_by_name('State'))
-        city_drop_down = Select(self.driver.find_element_by_name('City'))
-        job_category_drop_down.select_by_visible_text(self.job_query_parameters.job_category)
-        country_drop_down.select_by_visible_text(self.job_query_parameters.country)
-        state_drop_down.select_by_visible_text(self.job_query_parameters.state)
-        city_drop_down.select_by_visible_text(self.job_query_parameters.city)
+        for f in self.job_filters:
+            f.apply_filter()
 
     def __wait_till_search_filter_is_applied(self):
         WebDriverWait(self.driver, 10).until(
