@@ -4,16 +4,16 @@ import getopt
 import sys
 
 from selenium import webdriver
-from src.model.pages.applicationQuestionsPage import ApplicationQuestionsPage
-from src.model.pages.myExperiencePage import MyExperiencePage
-from src.model.pages.myInformationPage import MyInformationPage
 
 from src.controller.jobApplication import JobApplication
 from src.controller.jobFilter import JobFilter
 from src.controller.jobFinder import JobFinder
+from src.helper.inputOutput import InputOutput, JobOutput
 from src.model.answers import Answers
-from src.model.inputOutput import InputOutput, JobOutput
+from src.model.pages.applicationQuestionsPage import ApplicationQuestionsPage
 from src.model.pages.createAccountPage import CreateAccountPage
+from src.model.pages.myExperiencePage import MyExperiencePage
+from src.model.pages.myInformationPage import MyInformationPage
 from src.model.user import User
 
 
@@ -44,7 +44,13 @@ def build_pages():
     return [create_account_page, my_information_page, my_experience_page, application_questions_page]
 
 
+def set_console_size(rows, columns):
+    sys.stdout.write("\x1b[8;{0};{1}t".format(rows, columns))
+
+
 if __name__ == "__main__":
+    set_console_size(80, 250)
+
     if should_run_in_headless_mode():
         driver = webdriver.PhantomJS()
         driver.set_window_size(1280, 720)
@@ -74,5 +80,5 @@ if __name__ == "__main__":
     except Exception as e:
         InputOutput.output(e)
         InputOutput.output('No Jobs found')
-    # finally:
-    #     driver.close()
+    finally:
+        driver.close()

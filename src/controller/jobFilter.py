@@ -1,9 +1,8 @@
-import time
-
 from selenium.webdriver.support.ui import Select
 
-from src.model.inputOutput import Color
-from src.model.inputOutput import InputOutput
+from src.helper.inputOutput import Color
+from src.helper.inputOutput import InputOutput
+from src.helper.timer import Timer
 
 
 class JobFilter(object):
@@ -29,7 +28,7 @@ class JobFilter(object):
 
     @staticmethod
     def __wait_till_other_filter_drop_downs_refresh():
-        time.sleep(2)
+        Timer.sleep(2)
 
     @staticmethod
     def __print_filter_values_in_drop_down(options):

@@ -21,4 +21,5 @@ class Page(object):
                                              self.name))
 
     def click_next_button(self):
-        self.driver.find_element_by_xpath('//*[@id="vpsBody"]/div[6]/div[1]/div[2]/button[1]').click()
+        next_button = self.driver.find_element_by_xpath('//*[@id="vpsBody"]/div[6]/div[1]/div[2]/button[1]')
+        self.driver.execute_script('arguments[0].click();', next_button)

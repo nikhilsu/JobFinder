@@ -1,6 +1,3 @@
-import time
-
-
 class JobApplication(object):
     def __init__(self, driver, job, user, pages):
         self.driver = driver
@@ -18,6 +15,5 @@ class JobApplication(object):
         for page in self.pages:
             page.wait_for_page_to_load()
             page.fill()
-            time.sleep(5)
 
         print('Job application form is open in the web driver. Fill in the details to apply!')

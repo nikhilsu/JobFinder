@@ -18,7 +18,7 @@ class CreateAccountPage(Page):
         self.driver.find_element_by_xpath('//*[@id="vpsBody"]/div[6]/div[1]/div[1]/button[1]').click()
 
     def wait_for_page_to_load(self):
-        WebDriverWait(self.driver, 10).until(
+        WebDriverWait(self.driver, 30).until(
             EC.presence_of_element_located((By.XPATH, "//button[@data-automation-id='goButton']")))
 
     def fill(self):
